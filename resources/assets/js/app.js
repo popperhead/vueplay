@@ -1,40 +1,37 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 import VueAxios from "vue-axios";
 import axios from "axios";
 Vue.use(VueAxios, axios);
-
-import App from "./views/App";
-import App1 from "./views/App1";
-import Hello from "./views/Hello";
-import Home from "./views/Home";
+const Home = { template: '<div>This is Home</div>' }
+const Foo = { template: '<div>This is Foo</div>' }
+const Bar = { template: '<div>This is Bar {{ $route.params.id }}</div>' }
 
 const router = new VueRouter({
-    mode: "history",
-    routes: [
-        {
-            path: "/",
-            name: "home",
-            component: Home
-        },
-        {
-            path: "/hello",
-            name: "hello",
-            component: Hello
-        },
-        {
-            path: "/app1",
-            name: "app1",
-            component: App1
-        }
-    ]
-});
+  mode: 'history',
+  base: __dirname,
+  routes: [
+    { path: '/', name: 'home', component: Home },
+    { path: '/foo', name: 'foo', component: Foo },
+    { path: '/bar/:id', name: 'bar', component: Bar }
+  ]
+})
 
-const app = new Vue({
-    el: "#app",
-    components: { App },
-    router
-});
+new Vue({
+  router,
+  template: `
+    <div id="app">
+      <h1>Named Routes</h1>
+      <p>Current route name: {{ $route.name }}</p>
+      <ul>
+        <li><router-link :to="{ name: 'home' }">home</router-link></li>
+        <li><router-link :to="{ name: 'foo' }">foo</router-link></li>
+        <li><router-link :to="{ name: 'bar', params: { id: 123 }}">bar</router-link></li>
+      </ul>
+      <router-view class="view"></router-view>
+    </div>
+  `
+}).$mount('#app')
